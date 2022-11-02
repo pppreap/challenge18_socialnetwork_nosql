@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 const moment =require('moment');
-const { User } = require('.');
+
 
 const UserSchema = new Schema ({
     username: {
@@ -19,13 +19,13 @@ const UserSchema = new Schema ({
         type: Schema.Types.ObjectId,
         ref: 'Thought'
     }
-],
-friends:[
+    ],
+    friends:[
     {
         type: Schema.Types.ObjectId,
         ref: 'User'
     }
-]
+    ]
 },
 {
     toJSON: {

@@ -4,7 +4,6 @@ const userController = {
     getAllUser( req, res){
         User.find({})
             .select('-_v')
-            .sort({_id: -1})
             .then(dbUserData=> res.json(dbUserData))
             .catch(err => {
                 console.log(err);
@@ -51,19 +50,18 @@ const userController = {
                 })
                 .catch(err=>res.json(err));
             },
-        deleteUser({ params }, res ){
-            Thought.deleteMany({userId:params.id})
-                .then(()=>{
-                    User.findOneAndDelete({ userId: params.id})
-                        .then(dbUserData => {
-                            if(!dbUserData){
-                                res.status(404).json({ message: 'No User found with this Id'});
-                                return;
-                            }
-                            res.json(dbUserData);
-                        });
-                })
-                .catch(err => res.json(err));
+        deleteUser(req, res ){
+            User.findOneAndDelete({ _id: req.params.userId })
+            .then((user) => {
+              if (!user) {
+                res.status(404).json({ message: "No user found with that id" });
+              } else {
+                // Deletes the thoughts associated with the user being deleted
+                return Thought.deleteMany({ _id: { $in: user.thoughts } });
+              }
+            })
+            .then(() => res.json({ message: "User and thoughts deleted" }))
+            .catch((err) => res.status(500).json(err));
         },
 
         addFriend( {params}, res) {
