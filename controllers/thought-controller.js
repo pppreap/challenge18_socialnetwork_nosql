@@ -3,14 +3,14 @@ const { User, Thought } = require('../models');
 const thoughtController = {
     getAllThought(req,res){
         Thought.find()
-            .select('-_v')
+            .select('-__v')
             .then((dbThoughtData)=> res.json(dbThoughtData))
             .catch((err) => 
-                res.sendStatus(400).json(err));
+                res.status(500).json(err));
     },
     getThoughtById (req,res){
-        Thought.findOne({_id: req.params.thoughtId})
-            .select('-_v')
+        Thought.findOne({ _id: req.params.thoughtId})
+            .select('-__v')
             .then(dbThoughtData=> {
                 if (!dbThoughtData){
                     res.status(404)
@@ -28,7 +28,7 @@ const thoughtController = {
             res.json(dbThoughtData);
             User.findOneAndUpdate(
                 { _id: req.body.userId },
-                { $addToSet: { thoughts: dbThoughtData._id }},
+                { $addToSet: { thoughts: dbThoughtData._id , thoughtText }},
                 { new: true }
             ).catch((err)=>res.status(500).json(err));
         })
