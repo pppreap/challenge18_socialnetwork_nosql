@@ -27,7 +27,7 @@ const thoughtController = {
         .then((dbThoughtData) =>{
             res.json(dbThoughtData);
             User.findOneAndUpdate(
-                { _id: req.body.id },
+                { _id: req.body.userId },
                 { $addToSet: { thoughts: dbThoughtData._id , thoughtText }},
                 { new: true }
             ).catch((err)=>res.status(500).json(err));
