@@ -20,14 +20,14 @@ const thoughtController = {
                 }
             })
             .catch((err) => 
-                res.sendStatus(400).json(err));
+                res.status(500).json(err));
      },
      createThought(req, res) {
         Thought.create(req.body)
         .then((dbThoughtData) =>{
             res.json(dbThoughtData);
             User.findOneAndUpdate(
-                { _id: req.body.userId },
+                { _id: req.body.id },
                 { $addToSet: { thoughts: dbThoughtData._id , thoughtText }},
                 { new: true }
             ).catch((err)=>res.status(500).json(err));
