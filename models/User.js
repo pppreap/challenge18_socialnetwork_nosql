@@ -1,5 +1,4 @@
-const { Schema, model } = require('mongoose');
-const moment =require('moment');
+const { Schema, model, Types } = require('mongoose');
 
 
 const UserSchema = new Schema ({
@@ -25,7 +24,7 @@ const UserSchema = new Schema ({
         type: Schema.Types.ObjectId,
         ref: 'User'
     }
-    ]
+    ],
 },
 {
     toJSON: {

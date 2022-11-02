@@ -1,6 +1,7 @@
 const { User, Thought } = require('../models');
 
-const thoughtController = {
+module.exports = {
+
     getAllThought(req,res){
         Thought.find()
             .select('-__v')
@@ -28,7 +29,7 @@ const thoughtController = {
             res.json(dbThoughtData);
             User.findOneAndUpdate(
                 { _id: req.body.userId },
-                { $addToSet: { thoughts: dbThoughtData._id , thoughtText }},
+                { $addToSet: { thoughts: dbThoughtData._id, thoughtText }},
                 { new: true }
             ).catch((err)=>res.status(500).json(err));
         })
@@ -36,14 +37,17 @@ const thoughtController = {
      },
 
      updateThought(req, res) {
-        Thought.findOneAndUpdate({_id: req.params.thoughtId}, {$set: req.body}, {new:true, runValidators:true})
+        Thought.findOneAndUpdate(
+            {_id: req.params.thoughtId}, 
+            {$addToSet: req.body}, 
+            {new:true, runValidators:true})
             .then(dbThoughtData => {
                 if(!dbThoughtData) {
                     res.status(404).json({message:'No Thoughts found with this id!'});
                 } else {
                 res.json(dbThoughtData);
                 }
-            })
+              })
                 .catch((err)=>res.json(err));
             },
 
@@ -74,11 +78,10 @@ const thoughtController = {
                 { $pull: { reactions: {reactionId: req.params.reactionId} }},
                 { new:true }
             )
-            .then((dbThoughtData) => 
-                res.json({ message: 'Reaction deleted!'}))
+            .then((dbThoughtData) => res.json({ message: 'Reaction deleted!'}))
             .catch((err) => res.json(err));
         },
 
 };
 
-module.exports = thoughtController;
+
