@@ -67,8 +67,8 @@ module.exports = {
                 { _id: req.params.thoughtId },
                 { $addtoSet: { reactions: req.body }},
                 { new:true,  runValidators:true})
-            .then((dbThoughtData) => 
-                res.json(dbThoughtData))
+            .then((reactionData) => 
+                res.json(reactionData))
             .catch((err) => res.status(500).json(err));
         },
 
@@ -77,9 +77,10 @@ module.exports = {
                 { _id: req.params.thoughtId },
                 { $pull: { reactions: {reactionId: req.params.reactionId} }},
                 { new:true }
+                .then((reactionData) => 
+                res.json(reactionData,{message: 'Reaction deleted!'}))
             )
-            .then((dbThoughtData) => res.json({ message: 'Reaction deleted!'}))
-            .catch((err) => res.json(err));
+            .catch((err) => res.json(err,  ));
         },
 
 };
