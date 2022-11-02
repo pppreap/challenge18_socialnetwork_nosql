@@ -12,7 +12,7 @@ const ReactionSchema = new Schema (
         required: true,
         maxlength: 280,
     },
-   username: {
+    username: {
         type: String,
         required: true,
     },
@@ -20,11 +20,11 @@ const ReactionSchema = new Schema (
         type:Date,
         default: Date.now,
         get: createdAtVal => moment(createdAtVal).format('MMM DD,YYYY [at] hh:mm a')
+        },
     },
- },
     {
         toJSON: {
-                getters: true,
+            getters: true,
         },
         id: false,
     }

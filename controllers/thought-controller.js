@@ -65,24 +65,35 @@ module.exports = {
         createReaction(req, res) {
             Thought.findOneAndUpdate(
                 { _id: req.params.thoughtId },
-                { $addtoSet: { reactions: req.body }},
+                { $push: { reactions: req.body }},
                 { new:true,  runValidators:true})
-            .then((reactionData) => 
-                res.json(reactionData))
-            .catch((err) => res.status(500).json(err));
-        },
+                .populate({path: 'reactions', select: '-__v'})
+                .select('-__v')
+                .then(dbThoughtData => {
+                    if (!dbThoughtData) {
+                        res.status(404).json({message: 'No thoughts with this ID.'});
+                        return;
+                    }
+                    res.json(dbThoughtData);
+                })
+                .catch(err => res.status(400).json(err))
+            },
 
         deleteReaction( req, res) {
             Thought.findOneAndUpdate(
                 { _id: req.params.thoughtId },
                 { $pull: { reactions: {reactionId: req.params.reactionId} }},
-                { new:true }
-                .then((reactionData) => 
-                res.json(reactionData,{message: 'Reaction deleted!'}))
-            )
-            .catch((err) => res.json(err,  ));
-        },
-
+                { new:true })
+                .then(dbThoughtData => {
+                    if (!dbThoughtData) {
+                      res.status(404).json({ message: 'None!'});
+                      return;
+                    }
+                   res.json(dbThoughtData);
+                  })
+                  .catch(err => res.json(err));
+              }
+            
 };
 
 
