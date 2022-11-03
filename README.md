@@ -61,7 +61,7 @@ This application is covered by the MIT license.
 MSU Boot Camp
 
 ## Tests
-Insomnia test routes CRUD for users and thoughts , 
+Insomnia test routes CRUD for users and thoughts  
 
 app not deployed 
 
