@@ -39,7 +39,7 @@ module.exports = {
      updateThought(req, res) {
         Thought.findOneAndUpdate(
             {_id: req.params.thoughtId}, 
-            {$addToSet: req.body}, 
+            {$set: req.body}, 
             {new:true, runValidators:true})
             .then(dbThoughtData => {
                 if(!dbThoughtData) {
